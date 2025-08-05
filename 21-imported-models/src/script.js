@@ -1,5 +1,7 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
+import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'
 import GUI from 'lil-gui'
 
 /**
@@ -13,6 +15,77 @@ const canvas = document.querySelector('canvas.webgl')
 
 // Scene
 const scene = new THREE.Scene()
+
+/**
+ * Models
+ */
+const dracoLoader = new DRACOLoader()
+dracoLoader.setDecoderPath('/draco/')
+
+const gltfLoader = new GLTFLoader()
+gltfLoader.setDRACOLoader(dracoLoader)
+
+// gltfLoader.load(
+//     '/models/Duck/glTF/Duck.gltf',
+//     (gltf) => {
+//         console.log('success')
+//         console.log(gltf)
+//         scene.add(gltf.scene.children[0])
+//     }
+// )
+
+// gltfLoader.load(
+//     '/models/Duck/glTF-Binary/Duck.glb',
+//     (gltf) => {
+//         console.log('success')
+//         console.log(gltf)
+//         scene.add(gltf.scene.children[0])
+//     }
+// )
+
+// gltfLoader.load(
+//     '/models/Duck/glTF-Embedded/Duck.gltf',
+//     (gltf) => {
+//         console.log('success')
+//         console.log(gltf)
+//         scene.add(gltf.scene.children[0])
+//     }
+// )
+
+// gltfLoader.load(
+//     '/models/FlightHelmet/glTF/FlightHelmet.gltf',
+//     (gltf) =>
+//     {
+//         // for (const child of gltf.scene.children) {
+//         //     scene.add(child)
+//         // }
+//         while (gltf.scene.children.length) {
+//             scene.add(gltf.scene.children[0])
+//         }
+
+//         // scene.add(gltf.scene.children[0])
+
+//         // scene.add(gltf.scene)
+//     }
+// )
+let mixer = null
+
+gltfLoader.load(
+    '/models/Fox/glTF/Fox.gltf',
+    (gltf) => {
+        console.log('success')
+        console.log(gltf)
+        gltf.scene.scale.set(0.025, 0.025, 0.025)
+        scene.add(gltf.scene)
+        mixer = new THREE.AnimationMixer(gltf.scene)
+        // const action = mixer.clipAction(gltf.animations[0])
+        const action = mixer.clipAction(gltf.animations[1])
+        action.play()
+    }
+)
+
+
+
 
 /**
  * Floor
@@ -104,6 +177,10 @@ const tick = () =>
     const elapsedTime = clock.getElapsedTime()
     const deltaTime = elapsedTime - previousTime
     previousTime = elapsedTime
+
+    if(mixer) {
+        mixer.update(deltaTime)
+    }
 
     // Update controls
     controls.update()
