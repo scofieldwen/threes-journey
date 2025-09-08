@@ -1,4 +1,5 @@
 import Sizes from './Utils/Size.js'
+import Time from './Utils/Time.js'
 export default class Experience {
   constructor(canvas) {
     // Global access
@@ -10,5 +11,15 @@ export default class Experience {
 
     // Setup
     this.sizes = new Sizes()
+    this.time = new Time()
+
+    // Resize event
+    this.sizes.on('resize', () => {
+      this.resize()
+    })
+  }
+
+  resize() {
+
   }
 }
