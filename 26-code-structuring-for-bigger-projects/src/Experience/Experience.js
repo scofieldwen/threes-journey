@@ -1,8 +1,11 @@
 import * as THREE from 'three'
-import Sizes from './Utils/Size.js'
+import Sizes from './Utils/Sizes.js'
 import Time from './Utils/Time.js'
 import Camera from './Utils/Camera.js'
 import Renderer from './Renderer.js'
+import World from "./World/World.js";
+import Resources from './Utils/Resources.js'
+import sources from './sources.js'
 
 let instance = null
 export default class Experience {
@@ -19,17 +22,19 @@ export default class Experience {
 
     // Options
     this.canvas = canvas
-    console.log('Here starts a great experience')
 
     // Setup
     this.sizes = new Sizes()
     this.time = new Time()
     this.scene = new THREE.Scene()
+    this.resources = new Resources(sources)
     this.camera = new Camera()
     this.renderer = new Renderer()
+    this.world = new World()
 
     // Resize event
     this.sizes.on('resize', () => {
+      console.log('resize resize resize')
       this.resize()
     })
 
@@ -41,10 +46,10 @@ export default class Experience {
   resize() {
     this.camera.resize()
     this.renderer.resize()
+    
   }
 
   update() {
-    // console.log('time tick resolve ---->')
     this.camera.update()
     this.renderer.update()
   }
