@@ -1,10 +1,21 @@
 import './style.css'
 import ReactDOM from 'react-dom/client'
+import { Canvas } from '@react-three/fiber'
+import Experience from './Experience.jsx'
 
 const root = ReactDOM.createRoot(document.querySelector('#root'))
 
+const cameraSettings = {
+    fov: 45,
+    near: 0.1,
+    far: 200,
+    position: [ 3, 2, 6 ] 
+}
+
 root.render(
-    <>
-        Soon to be a badass R3F application
-    </>
+    <Canvas
+        camera={ cameraSettings }
+    >
+        <Experience />
+    </Canvas>
 )
