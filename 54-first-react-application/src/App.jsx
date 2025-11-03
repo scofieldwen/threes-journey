@@ -1,6 +1,7 @@
 // import './App.css'
-import { useMemo, useState } from 'react'
+import { useMemo, useState } from 'react';
 import Clicker from "./Clicker.jsx";
+import People from './People.jsx';
 
 function App({ clickersCount, children }) {
   console.log(`hsl(${ Math.random() * 360 }deg, 100%, 70%)`)
@@ -46,6 +47,8 @@ function App({ clickersCount, children }) {
             />
           )}
         </> }
+
+      <People />
     </>
   )
 }
