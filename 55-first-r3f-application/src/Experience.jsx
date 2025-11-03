@@ -14,8 +14,11 @@ export default function Experience()
   const groupRef = useRef()
 
   useFrame((state, delta) => {
-    console.log('🐲 ~ Experience ~ state:', state.camera)
-    console.log('🐲 ~ Experience ~ state:', state.clock)
+    // const angle = state.clock.elapsedTime
+    // state.camera.position.x = Math.sin(angle) * 8
+    // state.camera.position.z = Math.cos(angle) * 8
+    // state.camera.lookAt(0, 0, 0)
+
     cubeRef.current.rotation.y += delta
     // groupRef.current.rotation.y += delta
   })
@@ -25,7 +28,7 @@ export default function Experience()
       <directionalLight position={ [ 1, 2, 3 ] } intensity={ 4.5 } />
       <ambientLight intensity={ 1.5 } />
 
-      {/* <orbitControls args={ [ camera, gl.domElement ] } /> */}
+      <orbitControls args={ [ camera, gl.domElement ] } />
 
       <group ref={ groupRef }>
         <mesh position-x={ - 2 }>

@@ -1,6 +1,7 @@
 import './style.css'
 import ReactDOM from 'react-dom/client'
 import { Canvas } from '@react-three/fiber'
+import * as THREE from "three";
 import Experience from './Experience.jsx'
 
 const root = ReactDOM.createRoot(document.querySelector('#root'))
@@ -14,6 +15,12 @@ const cameraSettings = {
 
 root.render(
     <Canvas
+        gl={ {
+            antialias: true,
+            toneMapping: THREE.ACESFilmicToneMapping,
+            outputColorSpace: THREE.LinearSRGBColorSpace
+            // toneMapping: THREE.CineonToneMapping
+        } }
         camera={ cameraSettings }
     >
         <Experience />
