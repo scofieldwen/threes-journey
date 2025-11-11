@@ -1,8 +1,9 @@
-import { useFrame } from '@react-three/fiber'
-import { RandomizedLight, AccumulativeShadows, SoftShadows, BakeShadows, useHelper, OrbitControls } from '@react-three/drei'
-import { useRef } from 'react'
+import { useThree, useFrame } from '@react-three/fiber'
+import { Environment, Sky, ContactShadows, RandomizedLight, AccumulativeShadows, SoftShadows, BakeShadows, useHelper, OrbitControls } from '@react-three/drei'
+import { useEffect, useRef } from 'react'
 import { Perf } from 'r3f-perf'
 import * as THREE from 'three'
+import { useControls } from "leva";
 
 export default function Experience()
 {
@@ -11,7 +12,26 @@ export default function Experience()
     useHelper(directionalLight, THREE.DirectionalLightHelper, 1)
 
     const cube = useRef()
-    
+
+    const { color, opacity, blur } = useControls('contact shadows', {
+        color: '#1d8f75',
+        opacity: { value: 0.4, min: 0, max: 1 },
+        blur: { value: 2.8, min: 0, max: 10 },
+    })
+
+    const { sunPosition } = useControls('sky', {
+        sunPosition: { value: [ 1, 2, 3 ] }
+    })
+
+    const { envMapIntensity } = useControls('environment map', {
+        envMapIntensity: { value: 3.5, min: 0, max: 12 }
+    })
+
+    const scene = useThree(state => state.scene)
+    useEffect(() => {
+        scene.environmentIntensity = envMapIntensity
+    }, [ envMapIntensity ])
+
     useFrame((state, delta) =>
     {
         // const time = state.clock.elapsedTime
@@ -25,13 +45,48 @@ export default function Experience()
 
         {/* <SoftShadows size={ 25 } samples={ 10 } focus={ 0 } /> */}
 
+        {/* <Environment
+            background
+            files={ [
+                './environmentMaps/2/px.jpg',
+                './environmentMaps/2/nx.jpg',
+                './environmentMaps/2/py.jpg',
+                './environmentMaps/2/ny.jpg',
+                './environmentMaps/2/pz.jpg',
+                './environmentMaps/2/nz.jpg',
+            ] }
+        /> */}
+        <Environment
+            background
+            // files="./environmentMaps/the_sky_is_on_fire_2k.hdr"
+            // preset="sunset"
+        >
+            <color args={ [ '#000000' ] } attach="background" />
+            <mesh position-z={ - 5 } scale={ 10 }>
+                <planeGeometry />
+                <meshBasicMaterial color="red" />
+            </mesh>
+        </Environment>
+
+
+        <ContactShadows
+            position={ [ 0, - 0.99, 0 ]}
+            scale={ 10 }
+            resolution={ 512 }
+            far={ 5 }
+            color={ color }
+            opacity={ opacity }
+            blur={ blur }
+            frames={ 1 }
+        />
+
         <Perf position="top-left" />
 
         <OrbitControls makeDefault />
 
-        <directionalLight
+        {/* <directionalLight
             ref={ directionalLight }
-            position={ [ 1, 2, 3 ] }
+            position={ sunPosition }
             intensity={ 4.5 }
             castShadow
             shadow-mapSize={ [ 1024, 1024 ] }
@@ -41,8 +96,11 @@ export default function Experience()
             shadow-camera-right={ 5 }
             shadow-camera-bottom={ - 5 }
             shadow-camera-left={ - 5 }
-        />
-        <AccumulativeShadows
+        /> */}
+
+        {/* <Sky sunPosition={ sunPosition } /> */}
+
+        {/* <AccumulativeShadows
             position={ [ 0, -0.99, 0 ] }
             scale={ 10 }
             color="#316d39"
@@ -59,8 +117,8 @@ export default function Experience()
                 position={ [ 1, 2, 3 ] }
                 bias={ 0.001 }
             />
-        </AccumulativeShadows>
-        <ambientLight intensity={ 1.5 } />
+        </AccumulativeShadows> */}
+        {/* <ambientLight intensity={ 1.5 } /> */}
 
         <mesh castShadow position-x={ - 2 }>
             <sphereGeometry />
